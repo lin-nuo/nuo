@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<body>
+    <button onclick="jumpRooms()">进入房间（配置次数）</button>
+    <p id="timer">已执行 0 次，耗时 0 秒</p>
+
+<script>
+// 配置数据（修改这里即可）
+const config = {
+    executionTimes: 100000,   // 总执行次数
+    interval: 10,         // 每次跳转间隔（毫秒）
+    rooms: [               // 要跳转的房间列表
+/*        {
+            id: "15314892457822872739",
+            fromUserId: "1472483277"
+        },
+*/        {
+            id: "4645041469393818132",
+            fromUserId: "2579935135"
+        },
+        {
+            id: "4039218198002942543",
+            fromUserId: "2650321562"
+        }
+    ]
+};
+
+let counter = 0;
+let startTime = 0;
+
+function jumpRooms() {
+    startTime = Date.now();
+    const timerElement = document.getElementById("timer");
+    
+    // 递归执行跳转
+    function executeJump(index) {
+        if (index >= config.executionTimes) return;
+        
+        // 遍历所有房间跳转
+        config.rooms.forEach(room => {
+            const url = `imv://room/join?id=${room.id}&fromUserId=${room.fromUserId}`;
+            window.location.href = url;
+        });
+
+        // 更新计时
+        counter++;
+        const elapsed = (Date.now() - startTime) / 1000;
+        timerElement.textContent = `已执行 ${counter} 次，耗时 ${elapsed.toFixed(2)} 秒`;
+
+        // 间隔执行
+        setTimeout(() => executeJump(index + 1), config.interval);
+    }
+
+    executeJump(0);
+}
+</script>
+</body>
+</html>
